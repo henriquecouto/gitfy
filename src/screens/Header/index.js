@@ -19,7 +19,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function Header({ children, handleThemeType, themeType }) {
+export default function Header({
+  children,
+  handleThemeType,
+  themeType,
+  position
+}) {
   const classes = useStyles();
 
   return (
@@ -33,7 +38,7 @@ export default function Header({ children, handleThemeType, themeType }) {
                   <MenuIcon />
                 </IconButton>
                 <Typography variant="h6" color="textPrimary">
-                  Photos
+                  {position}
                 </Typography>
               </Grid>
             </Grid>
