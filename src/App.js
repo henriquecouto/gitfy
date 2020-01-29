@@ -1,17 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { useMediaQuery } from "@material-ui/core";
-import HelloWorld from "./HelloWorld";
+import Header from "./screens/Header";
 
-function App() {
-  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: light)");
+export default function App() {
+  const [themeType, setThemeType] = useState("dark");
+  const handleThemeType = () => {
+    setThemeType(v => (v === "light" ? "dark" : "light"));
+  };
+  const prefersDarkMode = useMediaQuery(`(prefers-color-scheme: ${themeType})`);
 
   const theme = React.useMemo(
     () =>
       createMuiTheme({
         palette: {
-          type: prefersDarkMode ? "dark" : "light"
+          type: prefersDarkMode ? "light" : "dark"
         }
       }),
     [prefersDarkMode]
@@ -19,9 +23,9 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <HelloWorld />
+      <Header handleThemeType={handleThemeType} themeType={themeType}>
+        Hello World
+      </Header>
     </ThemeProvider>
   );
 }
-
-export default App;
