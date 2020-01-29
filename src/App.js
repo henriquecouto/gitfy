@@ -5,7 +5,7 @@ import { useMediaQuery } from "@material-ui/core";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import Header from "./screens/Header";
-import Home from "./screens/Header/Home";
+import Home from "./screens/Home";
 
 export default function App() {
   const [themeType, setThemeType] = useState("dark");
