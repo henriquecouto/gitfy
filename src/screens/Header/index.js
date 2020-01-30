@@ -8,9 +8,7 @@ import {
   Drawer,
   List,
   ListItem,
-  ListItemIcon,
   ListItemText,
-  Divider,
   CssBaseline
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -21,6 +19,7 @@ import {
   Inbox as InboxIcon,
   Mail as MailIcon
 } from "@material-ui/icons";
+import { Link } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -52,7 +51,8 @@ export default function Header({
   children,
   handleThemeType,
   themeType,
-  position
+  position,
+  routes
 }) {
   const classes = useStyles();
 
@@ -96,23 +96,14 @@ export default function Header({
       >
         <div className={classes.toolbar} />
         <List>
-          {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {["All mail", "Trash", "Spam"].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
+          {Object.keys(routes).map(route => (
+            <ListItem
+              button
+              key={routes[route].name}
+              component={Link}
+              to={routes[route].path}
+            >
+              <ListItemText primary={routes[route].name} />
             </ListItem>
           ))}
         </List>

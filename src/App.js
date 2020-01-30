@@ -6,10 +6,15 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import Header from "./screens/Header";
 import Home from "./screens/Home";
+import Projects from "./screens/Projects";
 
 export default function App() {
   const [themeType, setThemeType] = useState("dark");
   const [position, setPosition] = useState("");
+
+  const handlePosition = newPosition => {
+    setPosition(routes[newPosition].name);
+  };
 
   const handleThemeType = () => {
     setThemeType(v => (v === "light" ? "dark" : "light"));
@@ -26,19 +31,35 @@ export default function App() {
     [prefersDarkMode]
   );
 
+  const routes = {
+    Home: {
+      render: () => <Home setPosition={handlePosition} />,
+      name: "Início",
+      path: "/"
+    },
+    Projects: {
+      render: () => <Projects setPosition={handlePosition} />,
+      name: "Projetos",
+      path: "/projects"
+    }
+  };
+
   return (
     <ThemeProvider theme={theme}>
-      <Header
-        handleThemeType={handleThemeType}
-        themeType={themeType}
-        position={position}
-      >
-        <Router>
-          <Route path="/">
-            <Home setPosition={v => setPosition(v)} />
-          </Route>
-        </Router>
-      </Header>
+      <Router>
+        <Header
+          handleThemeType={handleThemeType}
+          themeType={themeType}
+          position={position}
+          routes={routes}
+        >
+          {Object.keys(routes).map(route => (
+            <Route exact path={routes[route].path}>
+              {routes[route].render()}
+            </Route>
+          ))}
+        </Header>
+      </Router>
     </ThemeProvider>
   );
 }
