@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { useMediaQuery } from "@material-ui/core";
+import { Home as HomeIcon, Code as CodeIcon } from "@material-ui/icons";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import Header from "./screens/Header";
@@ -35,12 +36,14 @@ export default function App() {
     Home: {
       render: () => <Home setPosition={handlePosition} />,
       name: "Início",
-      path: "/"
+      path: "/",
+      icon: () => <HomeIcon />
     },
     Projects: {
       render: () => <Projects setPosition={handlePosition} />,
       name: "Projetos",
-      path: "/projects"
+      path: "/projects",
+      icon: () => <CodeIcon />
     }
   };
 
@@ -54,7 +57,7 @@ export default function App() {
           routes={routes}
         >
           {Object.keys(routes).map(route => (
-            <Route exact path={routes[route].path}>
+            <Route exact path={routes[route].path} key={routes[route].name}>
               {routes[route].render()}
             </Route>
           ))}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Typography,
   Toolbar,
@@ -9,15 +9,16 @@ import {
   List,
   ListItem,
   ListItemText,
-  CssBaseline
+  CssBaseline,
+  Hidden,
+  SwipeableDrawer,
+  ListItemIcon
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Menu as MenuIcon,
   Brightness4 as Brightness4Icon,
-  Brightness7 as Brightness7Icon,
-  Inbox as InboxIcon,
-  Mail as MailIcon
+  Brightness7 as Brightness7Icon
 } from "@material-ui/icons";
 import { Link } from "react-router-dom";
 
@@ -55,6 +56,27 @@ export default function Header({
   routes
 }) {
   const classes = useStyles();
+  const [drawer, setDrawer] = useState(false);
+
+  const toggleDrawer = () => {
+    setDrawer(v => !v);
+  };
+
+  const MenuList = () => (
+    <List>
+      {Object.keys(routes).map(route => (
+        <ListItem
+          button
+          key={routes[route].name}
+          component={Link}
+          to={routes[route].path}
+        >
+          <ListItemIcon>{routes[route].icon()}</ListItemIcon>
+          <ListItemText primary={routes[route].name} />
+        </ListItem>
+      ))}
+    </List>
+  );
 
   return (
     <div className={classes.root}>
@@ -64,9 +86,14 @@ export default function Header({
           <Grid container justify="space-between" alignItems="center">
             <Grid item>
               <Grid container alignItems="center">
-                <IconButton className={classes.menuButton}>
-                  <MenuIcon />
-                </IconButton>
+                <Hidden smUp>
+                  <IconButton
+                    className={classes.menuButton}
+                    onClick={toggleDrawer}
+                  >
+                    <MenuIcon />
+                  </IconButton>
+                </Hidden>
                 <Typography variant="h6" color="textPrimary">
                   {position}
                 </Typography>
@@ -87,27 +114,31 @@ export default function Header({
           </Grid>
         </Toolbar>
       </AppBar>
-      <Drawer
-        className={classes.drawer}
-        variant="permanent"
-        classes={{
-          paper: classes.drawerPaper
-        }}
-      >
-        <div className={classes.toolbar} />
-        <List>
-          {Object.keys(routes).map(route => (
-            <ListItem
-              button
-              key={routes[route].name}
-              component={Link}
-              to={routes[route].path}
-            >
-              <ListItemText primary={routes[route].name} />
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
+      <Hidden xsDown>
+        <Drawer
+          className={classes.drawer}
+          variant="permanent"
+          classes={{
+            paper: classes.drawerPaper
+          }}
+        >
+          <div className={classes.toolbar} />
+          <MenuList />
+        </Drawer>
+      </Hidden>
+      <Hidden smUp>
+        <SwipeableDrawer
+          open={drawer}
+          classes={{
+            paper: classes.drawerPaper
+          }}
+          onClose={toggleDrawer}
+          onOpen={toggleDrawer}
+        >
+          <div className={classes.toolbar} />
+          <MenuList />
+        </SwipeableDrawer>
+      </Hidden>
       <main className={classes.content}>
         <div className={classes.toolbar} />
         {children}
