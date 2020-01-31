@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Grid, Typography } from "@material-ui/core";
-import ListProjects from "../../components/ListProjects";
+import ListCards from "../../components/ListCards";
 
 const projects = [
   {
@@ -105,14 +105,14 @@ export default function Home({ setPosition }) {
         <Typography variant="h4">Projetos recentes</Typography>
       </Grid>
       <Grid item>
-        <ListProjects type={"project"} list={projects} />
+        <ListCards type={"project"} list={projects} />
       </Grid>
       <Grid item />
       <Grid item>
         <Typography variant="h4">Commits recentes</Typography>
       </Grid>
       <Grid item>
-        <ListProjects type={"commit"} list={commits} />
+        <ListCards type={"commit"} list={commits} />
       </Grid>
     </Grid>
   );

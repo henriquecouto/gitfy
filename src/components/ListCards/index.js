@@ -3,14 +3,14 @@ import { Grid, Hidden } from "@material-ui/core";
 import GitfyCard from "../GitfyCard";
 import { Redirect } from "react-router-dom";
 
-export default function ListProjects({ type, list }) {
+export default function ListCards({ type, list }) {
   const [redirect, setRedirect] = useState({ item: null });
   const openItem = item => {
     setRedirect({ item });
   };
   return (
     <>
-      {redirect.item && (
+      {redirect.item && type === "project" && (
         <Redirect
           to={{
             pathname: `/projects/${redirect.item}/commits`

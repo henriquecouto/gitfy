@@ -1,8 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
 import { Grid, Typography } from "@material-ui/core";
+import { useParams } from "react-router-dom";
+
+import searchCommits from "../../temp/commits";
+import ListCards from "../../components/ListCards";
 
 const currencies = [
   {
@@ -27,8 +31,19 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Commits({ setPosition }) {
+  const { projectId } = useParams();
   const classes = useStyles();
-  const [currency, setCurrency] = React.useState("EUR");
+  const [commits, setCommits] = useState([]);
+  const [currency, setCurrency] = useState("EUR");
+
+  const loadCommits = () => {
+    const finded = searchCommits.filter(v => {
+      if (v.projectId === projectId) {
+        return v;
+      }
+    });
+    setCommits(finded);
+  };
 
   const handleChange = event => {
     setCurrency(event.target.value);
@@ -37,6 +52,12 @@ export default function Commits({ setPosition }) {
   useEffect(() => {
     setPosition("Projects");
   });
+  useEffect(() => {
+    loadCommits();
+  }, [projectId]);
+
+  console.log(commits);
+
   return (
     <Grid container direction="column" spacing={4}>
       <Grid item>
@@ -64,6 +85,9 @@ export default function Commits({ setPosition }) {
       </Grid>
       <Grid item>
         <Typography variant="h4">Commits</Typography>
+      </Grid>
+      <Grid item>
+        <ListCards type={"commit"} list={commits} />
       </Grid>
     </Grid>
   );
