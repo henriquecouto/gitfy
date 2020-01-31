@@ -7,14 +7,15 @@ import "moment/locale/pt-br";
 const useStyles = makeStyles(theme => ({
   paper: {
     height: 250,
-    padding: theme.spacing(3)
+    padding: theme.spacing(3),
+    cursor: "pointer"
   }
 }));
 
-export default function GitfyCard({ type, item }) {
+export default function GitfyCard({ type, item, openItem }) {
   const classes = useStyles();
   return (
-    <Paper className={classes.paper}>
+    <Paper className={classes.paper} onClick={openItem}>
       <Grid
         container
         direction="column"
