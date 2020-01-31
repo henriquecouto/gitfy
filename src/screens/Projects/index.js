@@ -38,28 +38,33 @@ export default function Projects({ setPosition }) {
     setPosition("Projects");
   });
   return (
-    <div>
-      <Grid container spacing={3} alignItems="center">
-        <Grid item>
-          <Typography variant="h4">Selecionar Branch</Typography>
-        </Grid>
-        <Grid item>
-          <TextField
-            className={classes.root}
-            id="filled-select-currency"
-            select
-            value={currency}
-            onChange={handleChange}
-            variant="outlined"
-          >
-            {currencies.map(option => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.value}
-              </MenuItem>
-            ))}
-          </TextField>
+    <Grid container direction="column" spacing={4}>
+      <Grid item>
+        <Grid container spacing={3} alignItems="center">
+          <Grid item>
+            <Typography variant="h5">Selecionar Branch</Typography>
+          </Grid>
+          <Grid item>
+            <TextField
+              className={classes.root}
+              id="filled-select-currency"
+              select
+              value={currency}
+              onChange={handleChange}
+              variant="outlined"
+            >
+              {currencies.map(option => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.value}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
         </Grid>
       </Grid>
-    </div>
+      <Grid item>
+        <Typography variant="h4">Commits</Typography>
+      </Grid>
+    </Grid>
   );
 }
