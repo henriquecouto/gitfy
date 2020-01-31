@@ -1,27 +1,6 @@
 import React, { useEffect } from "react";
-import { Grid, Hidden, Typography, Divider } from "@material-ui/core";
-import GitfyCard from "../../components/GitfyCard";
-
-const Recents = ({ type, list }) => {
-  return (
-    <Grid container spacing={2}>
-      <Hidden mdDown>
-        {list.map(v => (
-          <Grid item xs={4} key={v.id}>
-            <GitfyCard item={v} type={type} />
-          </Grid>
-        ))}
-      </Hidden>
-      <Hidden lgUp>
-        {list.map(v => (
-          <Grid item xs={12} key={v.id}>
-            <GitfyCard item={v} type={type} />
-          </Grid>
-        ))}
-      </Hidden>
-    </Grid>
-  );
-};
+import { Grid, Typography } from "@material-ui/core";
+import ListProjects from "../../components/ListProjects";
 
 const projects = [
   {
@@ -126,14 +105,14 @@ export default function Home({ setPosition }) {
         <Typography variant="h4">Projetos recentes</Typography>
       </Grid>
       <Grid item>
-        <Recents type={"project"} list={projects} />
+        <ListProjects type={"project"} list={projects} />
       </Grid>
       <Grid item />
       <Grid item>
         <Typography variant="h4">Commits recentes</Typography>
       </Grid>
       <Grid item>
-        <Recents type={"commit"} list={commits} />
+        <ListProjects type={"commit"} list={commits} />
       </Grid>
     </Grid>
   );

@@ -1,31 +1,6 @@
 import React, { useEffect } from "react";
-import { Grid, Hidden, Typography, Divider } from "@material-ui/core";
-import GitfyCard from "../../components/GitfyCard";
-
-
-const ListProjects = ({ type, list }) => {
-  const openItem = (item)=>{
-    console.log(item)
-  }
-  return (
-    <Grid container spacing={2}>
-      <Hidden mdDown>
-        {list.map(v => (
-          <Grid item xs={4} key={v.id}>
-            <GitfyCard item={v} type={type} openItem={()=>openItem(type+String(v.id))}/>
-          </Grid>
-        ))}
-      </Hidden>
-      <Hidden lgUp>
-        {list.map(v => (
-          <Grid item xs={12} key={v.id}>
-            <GitfyCard item={v} type={type} openItem={()=>openItem(type+String(v.id))}/>
-          </Grid>
-        ))}
-      </Hidden>
-    </Grid>
-  );
-};
+import { Grid, Typography } from "@material-ui/core";
+import ListProjects from "../../components/ListProjects";
 
 const projects = [
   {
@@ -70,19 +45,18 @@ const projects = [
 ];
 
 export default function Projects({ setPosition }) {
-  
   useEffect(() => {
     setPosition("Projects");
   });
   return (
     <Grid container direction="column" spacing={3}>
-    <Grid item>
-      <Typography variant="h4">Projetos</Typography>
+      <Grid item>
+        <Typography variant="h4">Projetos</Typography>
+      </Grid>
+      <Grid item>
+        <ListProjects type={"project"} list={projects} />
+      </Grid>
+      <Grid item />
     </Grid>
-    <Grid item>
-      <ListProjects type={"project"} list={projects} />
-    </Grid>
-    <Grid item />
-  </Grid>
   );
 }
