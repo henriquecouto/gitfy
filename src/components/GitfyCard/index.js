@@ -1,32 +1,47 @@
 import React from "react";
 import { Typography, Paper, Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import moment from "moment";
+import "moment/locale/pt-br";
 
 const useStyles = makeStyles(theme => ({
   paper: {
-    height: "auto",
-    width: "auto",
+    height: 250,
     padding: theme.spacing(3)
   }
 }));
 
-export default function GitfyCard({ item }) {
+export default function GitfyCard({ type, item }) {
   const classes = useStyles();
   return (
     <Paper className={classes.paper}>
-      <Grid container spacing={3} direction="column">
+      <Grid
+        container
+        direction="column"
+        justify="space-between"
+        style={{ height: "100%" }}
+      >
         <Grid item>
-          <Typography variant="h6">Titulo {item}</Typography>
-          <Typography variant="subtitle1">
-            {`A descrição do projeto ${item} deverá ser mostrada aqui de acordo com o a descrição do github dsaoud dsaiduas iodu asdusaou`.substring(
-              0,
-              100
+          <Grid container justify="space-between" alignItems="flex-start">
+            <Typography variant="h6">{item.name}</Typography>
+            {type === "commit" && (
+              <Typography variant="subtitle2">{item.id}</Typography>
             )}
+          </Grid>
+          <Typography variant="subtitle1">
+            {item.desc.substring(0, 100)}
           </Typography>
         </Grid>
         <Grid item>
           <Grid container justify="flex-end">
-            <Typography variant="subtitle2">Linguagem {item}</Typography>
+            {type === "project" && (
+              <Typography variant="subtitle2">{item.lang}</Typography>
+            )}
+            {type === "commit" && (
+              <Typography variant="subtitle2">
+                {item.user} em {moment(item.date).format("llll")}
+              </Typography>
+            )}
           </Grid>
         </Grid>
       </Grid>
