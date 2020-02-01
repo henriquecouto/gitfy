@@ -14,6 +14,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function GitfyCard({ type, item, openItem }) {
   const classes = useStyles();
+  console.log(item);
   return (
     <Paper className={classes.paper} onClick={openItem}>
       <Grid
@@ -24,14 +25,23 @@ export default function GitfyCard({ type, item, openItem }) {
       >
         <Grid item>
           <Grid container justify="space-between" alignItems="flex-start">
-            <Typography variant="h6">{item.name}</Typography>
+            {type === "project" && (
+              <Typography variant="h6">{item.name}</Typography>
+            )}
             {type === "commit" && (
-              <Typography variant="subtitle2">{item.id}</Typography>
+              <Typography variant="h6">{item.desc}</Typography>
+            )}
+            {type === "commit" && (
+              <Typography variant="subtitle2">
+                {type === "project" ? item.id : item.hash}
+              </Typography>
             )}
           </Grid>
-          <Typography variant="subtitle1">
-            {item.desc.substring(0, 100)}
-          </Typography>
+          {type === "project" && (
+            <Typography variant="subtitle1">
+              {item.desc.substring(0, 100)}
+            </Typography>
+          )}
         </Grid>
         <Grid item>
           <Grid container justify="flex-end">

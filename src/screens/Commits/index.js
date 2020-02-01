@@ -9,6 +9,8 @@ import { useParams } from "react-router-dom";
 import ListCards from "../../components/ListCards";
 import { loadCommits, loadBranchs, addData } from "../../services/db";
 import GitfyModal from "../../components/GitfyModal";
+import ModalAddBranch from "./ModalAddBranch";
+import ModalAddCommit from "./ModalAddCommit";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -22,38 +24,70 @@ export default function Commits({ setPosition }) {
   const classes = useStyles();
   const [commits, setCommits] = useState([]);
   const [branchs, setBranchs] = useState([]);
-  const [modal, setModal] = useState({ open: false });
+  const [modalBranch, setModalBranch] = useState({ open: false });
+  const [modalCommit, setModalCommit] = useState({ open: false });
   const [formBranch, setFormBranch] = useState({ name: "" });
-  const [selectedBranch, SetSelectedBranch] = useState({});
+  const [formCommit, setFormCommit] = useState({
+    desc: "",
+    hash: "",
+    filePath: "",
+    doc: ""
+  });
+  const [selectedBranch, SetSelectedBranch] = useState("");
+
+  const handleBranchs = values => {
+    SetSelectedBranch(!!values[0] && values[0]);
+    setBranchs(values);
+  };
 
   useEffect(() => {
     setPosition("Projects");
   });
 
   useEffect(() => {
-    const unsubscribe = loadCommits(setCommits, {
-      projectId: projectId,
-      branchId: "1",
-      limit: 50
-    });
-    return () => unsubscribe();
-  }, [projectId]);
+    if (selectedBranch) {
+      const unsubscribe = loadCommits(setCommits, {
+        projectId: projectId,
+        branchId: selectedBranch.id,
+        limit: 50
+      });
+      return () => unsubscribe();
+    }
+  }, [projectId, selectedBranch]);
 
   useEffect(() => {
-    const unsubscribe = loadBranchs(setBranchs, {
+    const unsubscribe = loadBranchs(handleBranchs, {
       projectId: projectId
     });
+
     return () => unsubscribe();
   }, [projectId]);
 
-  const handleModal = () => {
-    setModal(v => ({ ...v, open: !v.open }));
+  const handleModalBranch = () => {
+    setModalBranch(v => ({ ...v, open: !v.open }));
   };
 
-  const save = async () => {
+  const handleModalCommit = () => {
+    setModalCommit(v => ({ ...v, open: !v.open }));
+  };
+
+  const saveBranch = async () => {
     const result = await addData("branchs", { ...formBranch, projectId });
     if (result.status) {
-      handleModal();
+      handleModalBranch();
+    } else {
+      console.log(result.error);
+    }
+  };
+
+  const saveCommit = async () => {
+    const result = await addData("commits", {
+      ...formCommit,
+      projectId,
+      branchId: selectedBranch.id
+    });
+    if (result.status) {
+      handleModalCommit();
     } else {
       console.log(result.error);
     }
@@ -63,39 +97,31 @@ export default function Commits({ setPosition }) {
     setFormBranch(old => ({ ...old, [id]: value }));
   };
 
+  const onChangeFormCommit = ({ target: { id, value } }) => {
+    setFormCommit(old => ({ ...old, [id]: value }));
+  };
+
   const onChangeSelectedBranch = ({ target: { value } }) => {
     SetSelectedBranch(value);
   };
 
   return (
     <>
-      <GitfyModal
-        handleClose={handleModal}
-        open={modal.open}
-        title="Adicionar Branch"
-        actions={[
-          () => {
-            return (
-              <div>
-                <Button onClick={handleModal}>Cancelar</Button>
-                <Button variant="contained" onClick={save} color="primary">
-                  Adicionar
-                </Button>
-              </div>
-            );
-          }
-        ]}
-      >
-        <TextField
-          id="name"
-          label="Nome da Branch"
-          autoFocus
-          margin="normal"
-          variant="outlined"
-          onChange={onChangeFormBranch}
-          value={formBranch.name}
-        />
-      </GitfyModal>
+      <ModalAddBranch
+        open={modalBranch.open}
+        handle={handleModalBranch}
+        save={saveBranch}
+        onChange={onChangeFormBranch}
+        form={formBranch}
+      />
+
+      <ModalAddCommit
+        open={modalCommit.open}
+        handle={handleModalCommit}
+        save={saveCommit}
+        onChange={onChangeFormCommit}
+        form={formCommit}
+      />
 
       {!branchs.length && (
         <Grid
@@ -103,18 +129,18 @@ export default function Commits({ setPosition }) {
           alignItems="center"
           justify="center"
           direction="column"
-          spacing={6}
-          onClick={handleModal}
+          spacing={2}
+          onClick={handleModalBranch}
           style={{ cursor: "pointer" }}
         >
           <Grid item>
-            <Fab color="primary" size="large" onClick={handleModal}>
+            <Fab color="primary" size="large">
               <AddIcon />
             </Fab>
           </Grid>
           <Grid item>
             <Typography variant="h4">
-              É hora de criar a primeira Branch do Projeto{" "}
+              Crie a primeira Branch do seu Projeto{" "}
               <span role="img" aria-label="Emoji sorrindo">
                 😄️
               </span>
@@ -126,11 +152,8 @@ export default function Commits({ setPosition }) {
       {!!branchs.length && (
         <Grid container direction="column" spacing={4}>
           <Grid item>
-            <Grid container spacing={3} alignItems="center">
-              <Grid item>
-                <Typography variant="h5">Selecionar Branch</Typography>
-              </Grid>
-              <Grid item>
+            <Grid container alignItems="center" justify="center" spacing={3}>
+              <Grid item xs>
                 <TextField
                   className={classes.root}
                   id="filled-select-currency"
@@ -138,19 +161,63 @@ export default function Commits({ setPosition }) {
                   value={selectedBranch}
                   onChange={onChangeSelectedBranch}
                   variant="outlined"
+                  style={{ width: "100%" }}
+                  size="small"
                 >
-                  {branchs.map(option => (
-                    <MenuItem key={option.id} value={option.name}>
-                      {option.name}
-                    </MenuItem>
-                  ))}
+                  {branchs.map(option => {
+                    return (
+                      <MenuItem key={option.id} value={option}>
+                        Branch: {option.name}
+                      </MenuItem>
+                    );
+                  })}
                 </TextField>
+              </Grid>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleModalBranch}
+                >
+                  Nova branch
+                </Button>
               </Grid>
             </Grid>
           </Grid>
-          <Grid item>
-            <Typography variant="h4">Commits</Typography>
-          </Grid>
+
+          {!commits.length && (
+            <Grid item>
+              <Grid
+                container
+                alignItems="center"
+                justify="center"
+                direction="column"
+                spacing={2}
+                onClick={handleModalCommit}
+                style={{ cursor: "pointer" }}
+              >
+                <Grid item>
+                  <Fab color="primary" size="large">
+                    <AddIcon />
+                  </Fab>
+                </Grid>
+                <Grid item>
+                  <Typography variant="h4">
+                    Crie o primeiro Commit da sua Branch{" "}
+                    <span role="img" aria-label="Emoji sorrindo">
+                      😄️
+                    </span>
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+          )}
+
+          {!!commits.length && (
+            <Grid item>
+              <Typography variant="h4">Commits</Typography>
+            </Grid>
+          )}
           <Grid item>
             <ListCards type={"commit"} list={commits} />
           </Grid>
