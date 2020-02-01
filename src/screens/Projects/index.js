@@ -1,62 +1,64 @@
-import React, { useEffect } from "react";
-import { Grid, Typography } from "@material-ui/core";
+import React, { useEffect, useState } from "react";
+import { Grid, Typography, Button } from "@material-ui/core";
 import ListCards from "../../components/ListCards";
 
-const projects = [
-  {
-    name: "Projeto Topper",
-    desc: "Esse é o projeto mais topper que você já viu/verá na face da terra",
-    lang: "God's Lang",
-    id: 1
-  },
-  {
-    name: "Projeto Mais Foda",
-    desc:
-      "Esse é o projeto mais foda que o mais topper que você já viu/verá na face da terra",
-    lang: "Nordic God's Lang",
-    id: 2
-  },
-  {
-    name: "Projeto Topper",
-    desc: "Esse é o projeto mais topper que você já viu/verá na face da terra",
-    lang: "God's Lang",
-    id: 3
-  },
-  {
-    name: "Projeto Mais Foda",
-    desc:
-      "Esse é o projeto mais foda que o mais topper que você já viu/verá na face da terra",
-    lang: "Nordic God's Lang",
-    id: 4
-  },
-  {
-    name: "Projeto Topper",
-    desc: "Esse é o projeto mais topper que você já viu/verá na face da terra",
-    lang: "God's Lang",
-    id: 5
-  },
-  {
-    name: "Projeto Mais Foda",
-    desc:
-      "Esse é o projeto mais foda que o mais topper que você já viu/verá na face da terra",
-    lang: "Nordic God's Lang",
-    id: 6
-  }
-];
+import { db } from "../../services/firebase";
+import ModalAdd from "./ModalAdd";
 
 export default function Projects({ setPosition }) {
+  const [modal, setModal] = useState({ open: false });
+  const [projects, setProjects] = useState([]);
   useEffect(() => {
     setPosition("Projects");
   });
+
+  const handleModal = () => {
+    setModal(modal => ({ ...modal, open: !modal.open }));
+  };
+
+  const addProject = async project => {
+    console.log("a");
+    await db.collection("projects").add({
+      ...project,
+      user: "1"
+    });
+    handleModal();
+  };
+
+  const loadProjects = () => {
+    db.collection("projects")
+      .where("user", "==", "1")
+      .get()
+      .then(querySnapshot => {
+        const result = [];
+        querySnapshot.forEach(doc => {
+          result.push({ id: doc.id, ...doc.data() });
+        });
+        setProjects(result);
+      });
+  };
+
+  useEffect(() => {
+    loadProjects();
+  });
+
   return (
-    <Grid container direction="column" spacing={3}>
-      <Grid item>
-        <Typography variant="h4">Projetos</Typography>
+    <>
+      <ModalAdd state={modal} handle={handleModal} add={addProject} />
+      <Grid container direction="column" spacing={3}>
+        <Grid item>
+          <Grid container justify="space-between" alignItems="center">
+            <Typography variant="h4">Projetos</Typography>
+            <Button variant="contained" onClick={handleModal} color="primary">
+              Adicionar Projeto
+            </Button>
+          </Grid>
+        </Grid>
+        <Grid item>
+          <ListCards type={"project"} list={projects} />
+        </Grid>
+        <Grid item />
       </Grid>
-      <Grid item>
-        <ListCards type={"project"} list={projects} />
-      </Grid>
-      <Grid item />
-    </Grid>
+    </>
   );
 }
