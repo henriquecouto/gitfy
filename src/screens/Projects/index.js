@@ -4,7 +4,7 @@ import ListCards from "../../components/ListCards";
 
 import { db } from "../../services/firebase";
 import ModalAdd from "./ModalAdd";
-import { loadData } from "../../services/db";
+import { loadProjects, addData } from "../../services/db";
 
 export default function Projects({ setPosition }) {
   const [modal, setModal] = useState({ open: false });
@@ -15,16 +15,16 @@ export default function Projects({ setPosition }) {
   };
 
   const addProject = async project => {
-    await db.collection("projects").add({
-      ...project,
-      user: "1",
-      registrationDate: new Date()
-    });
-    handleModal();
+    const result = await addData("projects", project);
+    if (result.status) {
+      handleModal();
+    } else {
+      console.log("erro");
+    }
   };
 
   useEffect(() => {
-    const unsubscribe = loadData(setProjects);
+    const unsubscribe = loadProjects(setProjects, { limit: 50 });
     return () => unsubscribe();
   }, []);
 

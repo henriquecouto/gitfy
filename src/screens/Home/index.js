@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Grid, Typography } from "@material-ui/core";
 import ListCards from "../../components/ListCards";
-import { loadData } from "../../services/db";
+import { loadProjects } from "../../services/db";
 
 const commits = [
   {
@@ -58,7 +58,7 @@ export default function Home({ setPosition }) {
   const [projects, setProjects] = useState([]);
 
   useEffect(() => {
-    const unsubscribe = loadData(setProjects, { limit: 6 });
+    const unsubscribe = loadProjects(setProjects, { limit: 6 });
     return () => unsubscribe();
   }, []);
 

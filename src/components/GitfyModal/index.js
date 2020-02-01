@@ -19,6 +19,7 @@ export default function GitfyModal({
       onClose={handleClose}
       aria-labelledby="customized-dialog-title"
       open={open}
+      maxWidth="md"
     >
       <DialogTitle id="customized-dialog-title" onClose={handleClose}>
         {title}
