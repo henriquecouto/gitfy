@@ -1,48 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Grid, Typography } from "@material-ui/core";
 import ListCards from "../../components/ListCards";
-
-const projects = [
-  {
-    name: "Projeto Topper",
-    desc: "Esse é o projeto mais topper que você já viu/verá na face da terra",
-    lang: "God's Lang",
-    id: 1
-  },
-  {
-    name: "Projeto Mais Foda",
-    desc:
-      "Esse é o projeto mais foda que o mais topper que você já viu/verá na face da terra",
-    lang: "Nordic God's Lang",
-    id: 2
-  },
-  {
-    name: "Projeto Topper",
-    desc: "Esse é o projeto mais topper que você já viu/verá na face da terra",
-    lang: "God's Lang",
-    id: 3
-  },
-  {
-    name: "Projeto Mais Foda",
-    desc:
-      "Esse é o projeto mais foda que o mais topper que você já viu/verá na face da terra",
-    lang: "Nordic God's Lang",
-    id: 4
-  },
-  {
-    name: "Projeto Topper",
-    desc: "Esse é o projeto mais topper que você já viu/verá na face da terra",
-    lang: "God's Lang",
-    id: 5
-  },
-  {
-    name: "Projeto Mais Foda",
-    desc:
-      "Esse é o projeto mais foda que o mais topper que você já viu/verá na face da terra",
-    lang: "Nordic God's Lang",
-    id: 6
-  }
-];
+import { loadProjects } from "../../services/db";
 
 const commits = [
   {
@@ -96,6 +55,13 @@ const commits = [
 ];
 
 export default function Home({ setPosition }) {
+  const [projects, setProjects] = useState([]);
+
+  useEffect(() => {
+    const unsubscribe = loadProjects(setProjects, { limit: 6 });
+    return () => unsubscribe();
+  }, []);
+
   useEffect(() => {
     setPosition("Home");
   });
@@ -111,9 +77,7 @@ export default function Home({ setPosition }) {
       <Grid item>
         <Typography variant="h4">Commits recentes</Typography>
       </Grid>
-      <Grid item>
-        <ListCards type={"commit"} list={commits} />
-      </Grid>
+      <Grid item>{/* <ListCards type={"commit"} list={commits} /> */}</Grid>
     </Grid>
   );
 }
