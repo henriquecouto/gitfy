@@ -9,6 +9,9 @@ import Header from "./components/Header";
 import Home from "./screens/Home";
 import Projects from "./screens/Projects";
 import Commits from "./screens/Commits";
+import Login from "./screens/Login";
+
+const {pathname} = window.location
 
 export default function App() {
   const [themeType, setThemeType] = useState("dark");
@@ -52,15 +55,19 @@ export default function App() {
     Commits: {
       render: () => <Commits setPosition={handlePosition} />,
       name: "Commits",
-      path: "/projects/:projectId/commits",
-      icon: () => <CodeIcon />
-    }
+      path: "/projects/:projectId/commits"
+    },
   };
 
   return (
     <ThemeProvider theme={theme}>
       <Router>
-        <Header
+        <Route exact path="/login">
+          <Login setPosition={handlePosition} />
+        </Route>
+        {
+          pathname !== "/login"&&
+          <Header
           handleThemeType={handleThemeType}
           themeType={themeType}
           position={position}
@@ -80,7 +87,7 @@ export default function App() {
               {routes[route].render()}
             </Route>
           ))}
-        </Header>
+        </Header>}
       </Router>
     </ThemeProvider>
   );
