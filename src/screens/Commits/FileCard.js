@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { Paper, Grid, Divider, ButtonGroup, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import Markdown from "react-markdown";
 import "moment/locale/pt-br";
+
+import Editor from "react-ace";
+import "ace-builds/src-noconflict/mode-markdown";
+import "ace-builds/src-noconflict/theme-tomorrow_night";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -27,10 +32,15 @@ const useStyles = makeStyles(theme => ({
     resize: "none",
     fontSize: theme.typography.body1.fontSize,
     lineHeight: theme.typography.body1.lineHeight
+  },
+  view: {
+    padding: theme.spacing(0, 2),
+    height: 367,
+    overflow: "auto"
   }
 }));
 
-export default function FileCard({ path, content, onChange }) {
+export default function FileCard({ path, content, onChange, onChangeDoc }) {
   const [edit, setEdit] = useState(true);
 
   const handleEdit = v => () => {
@@ -56,6 +66,7 @@ export default function FileCard({ path, content, onChange }) {
               <ButtonGroup
                 color="primary"
                 aria-label="outlined primary button group"
+                style={{ marginRight: 10 }}
               >
                 <Button
                   onClick={handleEdit(false)}
@@ -76,15 +87,23 @@ export default function FileCard({ path, content, onChange }) {
         <Divider variant="fullWidth" />
         <Grid item>
           {edit ? (
-            <textarea
-              id="doc"
-              onChange={onChange}
+            <Editor
+              mode="markdown"
+              theme="tomorrow_night"
+              onChange={onChangeDoc}
               value={content}
-              className={classes.input}
-              rows={14}
+              name="editor"
+              editorProps={{ $blockScrolling: false, $highlightPending: true }}
+              fontSize={16}
+              height="367px"
+              width="100%"
             />
           ) : (
-            <div className={classes.input}>{content}</div>
+            <Grid container className={classes.view}>
+              <Grid item>
+                <Markdown source={content} escapeHtml={false} />
+              </Grid>
+            </Grid>
           )}
         </Grid>
       </Grid>

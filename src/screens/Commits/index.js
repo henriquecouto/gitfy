@@ -100,6 +100,10 @@ export default function Commits({ setPosition }) {
     setFormCommit(old => ({ ...old, [id]: value }));
   };
 
+  const onChangeDoc = code => {
+    setFormCommit(old => ({ ...old, doc: code }));
+  };
+
   const onChangeSelectedBranch = ({ target: { value } }) => {
     SetSelectedBranch(value);
   };
@@ -119,6 +123,7 @@ export default function Commits({ setPosition }) {
         handle={handleModalCommit}
         save={saveCommit}
         onChange={onChangeFormCommit}
+        onChangeDoc={onChangeDoc}
         form={formCommit}
       />
 

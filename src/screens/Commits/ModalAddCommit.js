@@ -3,7 +3,14 @@ import GitfyModal from "../../components/GitfyModal";
 import { Button, TextField, Grid } from "@material-ui/core";
 import FileCard from "./FileCard";
 
-export default function ModalAddCommit({ handle, open, save, onChange, form }) {
+export default function ModalAddCommit({
+  handle,
+  open,
+  save,
+  onChange,
+  onChangeDoc,
+  form
+}) {
   return (
     <GitfyModal
       handleClose={handle}
@@ -43,7 +50,12 @@ export default function ModalAddCommit({ handle, open, save, onChange, form }) {
           onChange={onChange}
           value={form.hash}
         />
-        <FileCard path={form.filePath} content={form.doc} onChange={onChange} />
+        <FileCard
+          path={form.filePath}
+          content={form.doc}
+          onChange={onChange}
+          onChangeDoc={onChangeDoc}
+        />
       </Grid>
     </GitfyModal>
   );
