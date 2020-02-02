@@ -13,30 +13,12 @@ import SignIn from "./screens/SignIn";
 import SignUp from "./screens/SignUp";
 import ForgotPass from "./screens/ForgotPass";
 import { listenLogin } from "./services/auth";
+import CommitView from "./screens/CommitView";
 
 export default function App() {
   const [themeType, setThemeType] = useState("dark");
   const [position, setPosition] = useState("");
   const [logged, setLogged] = useState({ status: false });
-
-  const handlePosition = newPosition => {
-    setPosition(routesDrawer[newPosition].name);
-  };
-
-  const handleThemeType = () => {
-    setThemeType(v => (v === "light" ? "dark" : "light"));
-  };
-  const prefersDarkMode = useMediaQuery(`(prefers-color-scheme: ${themeType})`);
-
-  const theme = React.useMemo(
-    () =>
-      createMuiTheme({
-        palette: {
-          type: prefersDarkMode ? "light" : "dark"
-        }
-      }),
-    [prefersDarkMode]
-  );
 
   const routesDrawer = {
     Home: {
@@ -58,8 +40,32 @@ export default function App() {
       render: () => <Commits setPosition={handlePosition} />,
       name: "Commits",
       path: "/projects/:projectId/commits"
+    },
+    Commit: {
+      render: () => <CommitView setPosition={handlePosition} />,
+      name: "Commit",
+      path: "/projects/:projectId/commits/:commitId"
     }
   };
+
+  const handlePosition = newPosition => {
+    setPosition({ ...routesDrawer, ...routes }[newPosition].name);
+  };
+
+  const handleThemeType = () => {
+    setThemeType(v => (v === "light" ? "dark" : "light"));
+  };
+  const prefersDarkMode = useMediaQuery(`(prefers-color-scheme: ${themeType})`);
+
+  const theme = React.useMemo(
+    () =>
+      createMuiTheme({
+        palette: {
+          type: prefersDarkMode ? "light" : "dark"
+        }
+      }),
+    [prefersDarkMode]
+  );
 
   useEffect(() => {
     listenLogin(setLogged);

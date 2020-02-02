@@ -40,7 +40,7 @@ export default function Commits({ setPosition }) {
   };
 
   useEffect(() => {
-    setPosition("Projects");
+    setPosition("Commits");
   });
 
   useEffect(() => {
