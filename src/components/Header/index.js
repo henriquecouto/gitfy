@@ -21,7 +21,7 @@ import {
   Brightness4 as Brightness4Icon,
   Brightness7 as Brightness7Icon
 } from "@material-ui/icons";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { signOut } from "../../services/auth";
 
 const drawerWidth = 240;
@@ -57,28 +57,43 @@ export default function Header({
   position,
   routes
 }) {
+  const location = window.location.pathname.split("/")[1];
   const classes = useStyles();
   const [drawer, setDrawer] = useState(false);
+  const [redirect, setRedirect] = useState(false);
 
   const toggleDrawer = () => {
     setDrawer(v => !v);
   };
 
+  const callSignout = () => {
+    signOut();
+    setRedirect(true);
+  };
+
   const MenuList = () => (
     <List>
-      {Object.keys(routes).map(route => (
-        <ListItem
-          button
-          key={routes[route].name}
-          component={Link}
-          to={routes[route].path}
-        >
-          <ListItemIcon>{routes[route].icon()}</ListItemIcon>
-          <ListItemText primary={routes[route].name} />
-        </ListItem>
-      ))}
+      {Object.keys(routes).map(route => {
+        return (
+          <ListItem
+            button
+            key={routes[route].name}
+            component={Link}
+            to={routes[route].path}
+            onClick={toggleDrawer}
+            selected={`/${location}` === routes[route].path}
+          >
+            <ListItemIcon>{routes[route].icon()}</ListItemIcon>
+            <ListItemText primary={routes[route].name} />
+          </ListItem>
+        );
+      })}
     </List>
   );
+
+  if (redirect) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <div className={classes.root}>
@@ -112,7 +127,7 @@ export default function Header({
                   <Brightness7Icon />
                 )}
               </IconButton>
-              <Button onClick={signOut}>Sair</Button>
+              <Button onClick={callSignout}>Sair</Button>
             </Grid>
           </Grid>
         </Toolbar>

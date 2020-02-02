@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { loadCommit, loadBranch } from "../../services/db";
+import { loadCommit, loadBranch, loadProject } from "../../services/db";
 import { Grid, Typography, Divider, Paper, Hidden } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Markdown from "react-markdown";
@@ -37,9 +37,10 @@ const PaperFile = ({ file }) => {
 };
 
 export default function CommitView({ setPosition }) {
-  const { commitId } = useParams();
+  const { commitId, projectId } = useParams();
   const [commit, setCommit] = useState(null);
   const [branch, setBranch] = useState({});
+  const [project, setProject] = useState({});
 
   useEffect(() => {
     setPosition("Commit");
@@ -49,6 +50,11 @@ export default function CommitView({ setPosition }) {
     const unsubscribe = loadCommit(setCommit, { commitId });
     return () => unsubscribe();
   }, [commitId]);
+
+  useEffect(() => {
+    const unsubscribe = loadProject(setProject, { projectId });
+    return () => unsubscribe();
+  }, [projectId]);
 
   useEffect(() => {
     if (commit && commit.branchId) {
@@ -63,10 +69,13 @@ export default function CommitView({ setPosition }) {
         <Grid item>
           <Grid container justify="space-between">
             <Grid item>
-              <Typography variant="h5">Descrição: {commit.desc}</Typography>
+              <Typography variant="h6">Projeto: {project.name}</Typography>
             </Grid>
             <Grid item>
-              <Typography variant="h5">Branch: {branch.name}</Typography>
+              <Typography variant="h6">Branch: {branch.name}</Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="h6">Descrição: {commit.desc}</Typography>
             </Grid>
             <Grid item></Grid>
           </Grid>

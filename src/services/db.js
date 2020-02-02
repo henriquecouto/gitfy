@@ -75,3 +75,11 @@ export const loadBranch = (callback, { branchId }) => {
     .onSnapshot(v => callback(v.data()));
   return unsubscribe;
 };
+
+export const loadProject = (callback, { projectId }) => {
+  const unsubscribe = db
+    .collection("projects")
+    .doc(projectId)
+    .onSnapshot(v => callback(v.data()));
+  return unsubscribe;
+};
