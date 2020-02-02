@@ -10,6 +10,7 @@ import Home from "./screens/Home";
 import Projects from "./screens/Projects";
 import Commits from "./screens/Commits";
 import Login from "./screens/Login";
+import SignUp from "./screens/SignUp";
 
 const {pathname} = window.location
 
@@ -62,11 +63,14 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <Router>
+      <Route exact path="/signup">
+          <SignUp setPosition={handlePosition} />
+        </Route>
         <Route exact path="/login">
           <Login setPosition={handlePosition} />
         </Route>
         {
-          pathname !== "/login"&&
+          pathname !== "/login"&& pathname !== "/signup"&& 
           <Header
           handleThemeType={handleThemeType}
           themeType={themeType}
