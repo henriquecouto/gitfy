@@ -1,5 +1,4 @@
 import firebase from "firebase";
-import { useEffect, useState, useCallback } from "react";
 
 const config = {
   apiKey: "AIzaSyBy--l5odHLE5KK4eTpTS4RBzJsbaIkvC0",

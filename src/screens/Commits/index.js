@@ -2,13 +2,12 @@ import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
-import { Grid, Typography, Button, IconButton, Fab } from "@material-ui/core";
+import { Grid, Typography, Button, Fab } from "@material-ui/core";
 import { Add as AddIcon } from "@material-ui/icons";
 import { useParams } from "react-router-dom";
 
 import ListCards from "../../components/ListCards";
 import { loadCommits, loadBranchs, addData } from "../../services/db";
-import GitfyModal from "../../components/GitfyModal";
 import ModalAddBranch from "./ModalAddBranch";
 import ModalAddCommit from "./ModalAddCommit";
 
