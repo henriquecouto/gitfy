@@ -9,14 +9,16 @@ import Header from "./components/Header";
 import Home from "./screens/Home";
 import Projects from "./screens/Projects";
 import Commits from "./screens/Commits";
-import Login from "./screens/Login";
+import SignIn from "./screens/SignIn";
 import SignUp from "./screens/SignUp";
-
-const {pathname} = window.location
+import ForgotPass from "./screens/ForgotPass";
+import { auth } from "./services/firebase";
+import { listenLogin } from "./services/auth";
 
 export default function App() {
   const [themeType, setThemeType] = useState("dark");
   const [position, setPosition] = useState("");
+  const [logged, setLogged] = useState({ status: false });
 
   const handlePosition = newPosition => {
     setPosition(routesDrawer[newPosition].name);
@@ -57,21 +59,35 @@ export default function App() {
       render: () => <Commits setPosition={handlePosition} />,
       name: "Commits",
       path: "/projects/:projectId/commits"
-    },
+    }
   };
+
+  useEffect(() => {
+    listenLogin(setLogged);
+  }, []);
+
+  if (!logged.status) {
+    return (
+      <ThemeProvider theme={theme}>
+        <Router>
+          <Route exact path="/register">
+            <SignUp setPosition={handlePosition} />
+          </Route>
+          <Route exact path="/">
+            <SignIn setPosition={handlePosition} />
+          </Route>
+          <Route exact path="/forgot-password">
+            <ForgotPass setPosition={handlePosition} />
+          </Route>
+        </Router>
+      </ThemeProvider>
+    );
+  }
 
   return (
     <ThemeProvider theme={theme}>
       <Router>
-      <Route exact path="/signup">
-          <SignUp setPosition={handlePosition} />
-        </Route>
-        <Route exact path="/login">
-          <Login setPosition={handlePosition} />
-        </Route>
-        {
-          pathname !== "/login"&& pathname !== "/signup"&& 
-          <Header
+        <Header
           handleThemeType={handleThemeType}
           themeType={themeType}
           position={position}
@@ -91,7 +107,7 @@ export default function App() {
               {routes[route].render()}
             </Route>
           ))}
-        </Header>}
+        </Header>
       </Router>
     </ThemeProvider>
   );

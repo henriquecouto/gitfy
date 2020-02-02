@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { LockOutlined as LockOutlinedIcon } from "@material-ui/icons";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { signUp, listenLogin } from "../../services/auth";
+import { LockOutlined as LockOutlinedIcon } from "@material-ui/icons";
+import { signIn } from "../../services/auth";
+import { Link as RouterLink } from "react-router-dom";
 import {
   Container,
   CssBaseline,
   Avatar,
   Typography,
-  Grid,
   TextField,
   Button,
+  Grid,
   Link
 } from "@material-ui/core";
-import { Link as RouterLink, Redirect } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -34,21 +34,11 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function SignUp() {
+export default function SignIn() {
   const classes = useStyles();
 
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState({ status: false, message: "" });
-  const [redirect, setRedirect] = useState({ status: false });
-
-  useEffect(() => {
-    const unsubscribe = listenLogin(setRedirect);
-    return () => unsubscribe();
-  }, []);
-
-  if (redirect.status) {
-    return <Redirect to="/" />;
-  }
 
   const onChange = ({ target: { id, value } }) => {
     setForm(old => ({ ...old, [id]: value }));
@@ -56,9 +46,9 @@ export default function SignUp() {
 
   const make = async e => {
     e.preventDefault();
-    const result = await signUp(form.email, form.password);
+    const result = await signIn(form.email, form.password);
     if (result.status) {
-      setRedirect({ status: true });
+      console.log("entrou");
     } else {
       setError({ status: true, message: result.error });
     }
@@ -72,26 +62,27 @@ export default function SignUp() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Faça seu cadastro no Gitfy
+          Entrar no Gitfy
         </Typography>
         <form onSubmit={make} className={classes.form}>
           <TextField
             variant="outlined"
+            margin="normal"
             required
             fullWidth
-            margin="normal"
             id="email"
             label="Email"
             name="email"
             autoComplete="email"
+            autoFocus
             onChange={onChange}
             value={form.email}
           />
           <TextField
             variant="outlined"
+            margin="normal"
             required
             fullWidth
-            margin="normal"
             name="password"
             label="Senha"
             type="password"
@@ -100,25 +91,34 @@ export default function SignUp() {
             onChange={onChange}
             value={form.password}
           />
+
           {error.status && (
             <Typography variant="subtitle2" color="error">
               Erro: {error.message}
             </Typography>
           )}
+
           <Button
             type="submit"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
+            // onClick={make}
           >
-            Cadastrar
+            Entrar
           </Button>
         </form>
-        <Grid container justify="flex-end">
+
+        <Grid container>
+          <Grid item xs>
+            <Link variant="body2" component={RouterLink} to="/forgot-password">
+              Esqueceu a senha?
+            </Link>
+          </Grid>
           <Grid item>
-            <Link variant="body2" component={RouterLink} to="/">
-              Já possui uma Conta?
+            <Link variant="body2" component={RouterLink} to="/register">
+              Não possui uma conta? Cadastre-se
             </Link>
           </Grid>
         </Grid>

@@ -12,7 +12,8 @@ import {
   CssBaseline,
   Hidden,
   SwipeableDrawer,
-  ListItemIcon
+  ListItemIcon,
+  Button
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -21,6 +22,7 @@ import {
   Brightness7 as Brightness7Icon
 } from "@material-ui/icons";
 import { Link } from "react-router-dom";
+import { signOut } from "../../services/auth";
 
 const drawerWidth = 240;
 
@@ -110,6 +112,7 @@ export default function Header({
                   <Brightness7Icon />
                 )}
               </IconButton>
+              <Button onClick={signOut}>Sair</Button>
             </Grid>
           </Grid>
         </Toolbar>
