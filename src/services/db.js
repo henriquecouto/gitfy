@@ -1,10 +1,13 @@
 import { db } from "./firebase";
+import { getLoggedUser } from "./auth";
 
 export const addData = async (collection, data) => {
+  // return;
   try {
+    const { uid } = getLoggedUser();
     await db.collection(collection).add({
       ...data,
-      user: "1",
+      user: uid,
       registrationDate: new Date()
     });
     return { status: true };
@@ -19,9 +22,10 @@ const onSnapshot = (snapshot, next) => {
 };
 
 export const loadProjects = (callback, { limit }) => {
+  const { uid } = getLoggedUser();
   const unsubscribe = db
     .collection("projects")
-    .where("user", "==", "1")
+    .where("user", "==", uid)
     .limit(limit)
     .orderBy("registrationDate", "desc")
     .onSnapshot(snapshot => onSnapshot(snapshot, callback));
