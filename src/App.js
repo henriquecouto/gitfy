@@ -12,7 +12,6 @@ import Commits from "./screens/Commits";
 import SignIn from "./screens/SignIn";
 import SignUp from "./screens/SignUp";
 import ForgotPass from "./screens/ForgotPass";
-import { auth } from "./services/firebase";
 import { listenLogin } from "./services/auth";
 
 export default function App() {

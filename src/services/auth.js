@@ -52,3 +52,7 @@ export const listenLogin = callback => {
   });
   return unsubscribe;
 };
+
+export const getLoggedUser = () => {
+  return auth.currentUser;
+};
