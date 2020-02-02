@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Paper, Grid, Divider, ButtonGroup, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Markdown from "react-markdown";
@@ -40,11 +40,11 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function FileCard({ path, content, onChange, onChangeDoc }) {
-  const [edit, setEdit] = useState(true);
+export default function FileCard({ onChangeFile, file, position }) {
+  const [edit, setEdit] = useState({ status: true });
 
   const handleEdit = v => () => {
-    setEdit(old => v || !old);
+    setEdit({ status: v });
   };
 
   const classes = useStyles();
@@ -55,10 +55,11 @@ export default function FileCard({ path, content, onChange, onChangeDoc }) {
           <Grid container alignItems="center">
             <Grid item xs>
               <input
-                id="filePath"
                 placeholder="Caminho do arquivo"
-                onChange={onChange}
-                value={path}
+                onChange={({ target }) => {
+                  onChangeFile("path", target.value, position);
+                }}
+                value={file.path}
                 className={classes.input}
               />
             </Grid>
@@ -70,13 +71,13 @@ export default function FileCard({ path, content, onChange, onChangeDoc }) {
               >
                 <Button
                   onClick={handleEdit(false)}
-                  variant={!edit && "contained"}
+                  variant={!edit.status && "contained"}
                 >
                   Ver
                 </Button>
                 <Button
                   onClick={handleEdit(true)}
-                  variant={edit && "contained"}
+                  variant={edit.status && "contained"}
                 >
                   Editar
                 </Button>
@@ -86,14 +87,17 @@ export default function FileCard({ path, content, onChange, onChangeDoc }) {
         </Grid>
         <Divider variant="fullWidth" />
         <Grid item>
-          {edit ? (
+          {edit.status ? (
             <Editor
               mode="markdown"
               theme="tomorrow_night"
-              onChange={onChangeDoc}
-              value={content}
+              onChange={code => onChangeFile("doc", code, position)}
               name="editor"
-              editorProps={{ $blockScrolling: false, $highlightPending: true }}
+              value={file.doc}
+              editorProps={{
+                $blockScrolling: false,
+                $highlightPending: true
+              }}
               fontSize={16}
               height="367px"
               width="100%"
@@ -101,7 +105,7 @@ export default function FileCard({ path, content, onChange, onChangeDoc }) {
           ) : (
             <Grid container className={classes.view}>
               <Grid item>
-                <Markdown source={content} escapeHtml={false} />
+                <Markdown source={file.doc} escapeHtml={false} />
               </Grid>
             </Grid>
           )}

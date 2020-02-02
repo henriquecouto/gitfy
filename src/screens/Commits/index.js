@@ -29,8 +29,7 @@ export default function Commits({ setPosition }) {
   const [formCommit, setFormCommit] = useState({
     desc: "",
     hash: "",
-    filePath: "",
-    doc: ""
+    files: [{ path: "", doc: "" }]
   });
   const [selectedBranch, SetSelectedBranch] = useState("");
 
@@ -100,8 +99,16 @@ export default function Commits({ setPosition }) {
     setFormCommit(old => ({ ...old, [id]: value }));
   };
 
-  const onChangeDoc = code => {
-    setFormCommit(old => ({ ...old, doc: code }));
+  const onChangeFile = (field, value, index) => {
+    const old = formCommit;
+    old.files[index][field] = value;
+    setFormCommit({ ...old });
+  };
+
+  const addFile = () => {
+    const old = formCommit;
+    old.files.push({ path: "", doc: "" });
+    setFormCommit({ ...old });
   };
 
   const onChangeSelectedBranch = ({ target: { value } }) => {
@@ -123,7 +130,8 @@ export default function Commits({ setPosition }) {
         handle={handleModalCommit}
         save={saveCommit}
         onChange={onChangeFormCommit}
-        onChangeDoc={onChangeDoc}
+        onChangeFile={onChangeFile}
+        addFile={addFile}
         form={formCommit}
       />
 

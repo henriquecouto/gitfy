@@ -8,7 +8,8 @@ export default function ModalAddCommit({
   open,
   save,
   onChange,
-  onChangeDoc,
+  onChangeFile,
+  addFile,
   form
 }) {
   return (
@@ -18,7 +19,7 @@ export default function ModalAddCommit({
       title="Adicionar Commit"
       actions={[
         () => (
-          <Button variant="contained" onClick={save} color="primary">
+          <Button variant="contained" onClick={addFile} color="primary">
             Adicionar arquivo
           </Button>
         ),
@@ -32,30 +33,35 @@ export default function ModalAddCommit({
         )
       ]}
     >
-      <Grid container direction="column">
-        <TextField
-          id="desc"
-          label="Descrição"
-          autoFocus
-          margin="normal"
-          variant="outlined"
-          onChange={onChange}
-          value={form.name}
-        />
-        <TextField
-          id="hash"
-          label="Hash"
-          margin="normal"
-          variant="outlined"
-          onChange={onChange}
-          value={form.hash}
-        />
-        <FileCard
-          path={form.filePath}
-          content={form.doc}
-          onChange={onChange}
-          onChangeDoc={onChangeDoc}
-        />
+      <Grid container direction="column" spacing={2}>
+        <Grid item>
+          <TextField
+            id="desc"
+            label="Descrição"
+            autoFocus
+            margin="normal"
+            variant="outlined"
+            onChange={onChange}
+            value={form.name}
+            fullWidth
+          />
+        </Grid>
+        <Grid item>
+          <TextField
+            id="hash"
+            label="Hash"
+            margin="normal"
+            variant="outlined"
+            onChange={onChange}
+            value={form.hash}
+            fullWidth
+          />
+        </Grid>
+        {form.files.map((v, i) => (
+          <Grid item key={i}>
+            <FileCard position={i} file={v} onChangeFile={onChangeFile} />
+          </Grid>
+        ))}
       </Grid>
     </GitfyModal>
   );
