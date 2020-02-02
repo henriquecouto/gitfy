@@ -51,8 +51,10 @@ export const loadCommits = (callback, { projectId, branchId, limit }) => {
       .onSnapshot(snapshot => onSnapshot(snapshot, callback));
     return unsubscribe;
   } else {
+    const { uid } = getLoggedUser();
     const unsubscribe = db
       .collection("commits")
+      .where("user", "==", uid)
       .limit(limit)
       .orderBy("registrationDate", "desc")
       .onSnapshot(snapshot => onSnapshot(snapshot, callback));
