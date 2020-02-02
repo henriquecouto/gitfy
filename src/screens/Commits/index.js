@@ -181,6 +181,15 @@ export default function Commits({ setPosition }) {
                   Nova branch
                 </Button>
               </Grid>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleModalCommit}
+                >
+                  Novo commit
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
 
