@@ -32,6 +32,14 @@ export const loadProjects = (callback, { limit }) => {
   return unsubscribe;
 };
 
+export const loadCommit = (callback, { commitId }) => {
+  const unsubscribe = db
+    .collection("commits")
+    .doc(commitId)
+    .onSnapshot(v => callback(v.data()));
+  return unsubscribe;
+};
+
 export const loadCommits = (callback, { projectId, branchId, limit }) => {
   if (projectId && branchId) {
     const unsubscribe = db
@@ -57,5 +65,13 @@ export const loadBranchs = (callback, { projectId }) => {
     .collection("branchs")
     .where("projectId", "==", projectId)
     .onSnapshot(snapshot => onSnapshot(snapshot, callback));
+  return unsubscribe;
+};
+
+export const loadBranch = (callback, { branchId }) => {
+  const unsubscribe = db
+    .collection("branchs")
+    .doc(branchId)
+    .onSnapshot(v => callback(v.data()));
   return unsubscribe;
 };

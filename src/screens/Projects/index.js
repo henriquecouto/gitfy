@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { Grid, Typography, Button } from "@material-ui/core";
 import ListCards from "../../components/ListCards";
 
-import { db } from "../../services/firebase";
 import ModalAdd from "./ModalAdd";
 import { loadProjects, addData } from "../../services/db";
 

@@ -2,13 +2,12 @@ import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
-import { Grid, Typography, Button, IconButton, Fab } from "@material-ui/core";
+import { Grid, Typography, Button, Fab } from "@material-ui/core";
 import { Add as AddIcon } from "@material-ui/icons";
 import { useParams } from "react-router-dom";
 
 import ListCards from "../../components/ListCards";
 import { loadCommits, loadBranchs, addData } from "../../services/db";
-import GitfyModal from "../../components/GitfyModal";
 import ModalAddBranch from "./ModalAddBranch";
 import ModalAddCommit from "./ModalAddCommit";
 
@@ -30,8 +29,7 @@ export default function Commits({ setPosition }) {
   const [formCommit, setFormCommit] = useState({
     desc: "",
     hash: "",
-    filePath: "",
-    doc: ""
+    files: [{ path: "", doc: "" }]
   });
   const [selectedBranch, SetSelectedBranch] = useState("");
 
@@ -41,7 +39,7 @@ export default function Commits({ setPosition }) {
   };
 
   useEffect(() => {
-    setPosition("Projects");
+    setPosition("Commits");
   });
 
   useEffect(() => {
@@ -101,6 +99,18 @@ export default function Commits({ setPosition }) {
     setFormCommit(old => ({ ...old, [id]: value }));
   };
 
+  const onChangeFile = (field, value, index) => {
+    const old = formCommit;
+    old.files[index][field] = value;
+    setFormCommit({ ...old });
+  };
+
+  const addFile = () => {
+    const old = formCommit;
+    old.files.push({ path: "", doc: "" });
+    setFormCommit({ ...old });
+  };
+
   const onChangeSelectedBranch = ({ target: { value } }) => {
     SetSelectedBranch(value);
   };
@@ -120,6 +130,8 @@ export default function Commits({ setPosition }) {
         handle={handleModalCommit}
         save={saveCommit}
         onChange={onChangeFormCommit}
+        onChangeFile={onChangeFile}
+        addFile={addFile}
         form={formCommit}
       />
 
@@ -180,6 +192,15 @@ export default function Commits({ setPosition }) {
                   onClick={handleModalBranch}
                 >
                   Nova branch
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleModalCommit}
+                >
+                  Novo commit
                 </Button>
               </Grid>
             </Grid>

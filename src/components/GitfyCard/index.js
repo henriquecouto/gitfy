@@ -14,7 +14,6 @@ const useStyles = makeStyles(theme => ({
 
 export default function GitfyCard({ type, item, openItem }) {
   const classes = useStyles();
-  console.log(item);
   return (
     <Paper className={classes.paper} onClick={openItem}>
       <Grid
