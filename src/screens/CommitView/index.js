@@ -29,7 +29,11 @@ const PaperFile = ({ file }) => {
         </Grid>
         <Divider variant="fullWidth" />
         <Grid item>
-          <Markdown source={file.doc} escapeHtml={false} />
+          <Markdown
+            source={file.doc}
+            escapeHtml={false}
+            renderers={{ root: React.Fragment }}
+          />
         </Grid>
       </Grid>
     </Paper>
@@ -85,7 +89,7 @@ export default function CommitView({ setPosition }) {
             {commit.files.map((v, i) => (
               <React.Fragment key={i}>
                 <Hidden mdDown>
-                  <Grid item xs={4} key={i}>
+                  <Grid item xs key={i}>
                     <PaperFile file={v} />
                   </Grid>
                 </Hidden>
