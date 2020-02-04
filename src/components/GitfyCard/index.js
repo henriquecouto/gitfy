@@ -14,6 +14,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function GitfyCard({ type, item, openItem }) {
   const classes = useStyles();
+  console.log(item.username);
   return (
     <Paper className={classes.paper} onClick={openItem}>
       <Grid
@@ -49,7 +50,7 @@ export default function GitfyCard({ type, item, openItem }) {
             )}
             {type === "commit" && (
               <Typography variant="subtitle2">
-                {item.user} em {moment(item.date).format("llll")}
+                {item.username} em {moment(item.date).format("llll")}
               </Typography>
             )}
           </Grid>

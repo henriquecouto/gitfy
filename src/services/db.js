@@ -4,10 +4,11 @@ import { getLoggedUser } from "./auth";
 export const addData = async (collection, data) => {
   // return;
   try {
-    const { uid } = getLoggedUser();
+    const { displayName, uid } = getLoggedUser();
     await db.collection(collection).add({
       ...data,
       user: uid,
+      username: displayName,
       registrationDate: new Date()
     });
     return { status: true };

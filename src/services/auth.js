@@ -1,4 +1,5 @@
 import { auth } from "./firebase";
+import { addData } from "./db";
 
 const errors = {
   "auth/user-not-found": "Não há nenhum usuário registrado com esse email.",
@@ -9,9 +10,14 @@ const errors = {
   "auth/weak-password": "A senha precisa ter 6 ou mais caracteres"
 };
 
-export const signUp = async (email, password) => {
+export const signUp = async ({ email, password, username, fullName }) => {
   try {
     await auth.createUserWithEmailAndPassword(email, password);
+    const loggedUser = getLoggedUser();
+    await loggedUser.updateProfile({
+      displayName: username
+    });
+    await addData("users", { uid: loggedUser.uid, username, email, fullName });
     return { status: true };
   } catch (error) {
     console.log(error.code, error.message);

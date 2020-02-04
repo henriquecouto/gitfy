@@ -37,7 +37,12 @@ const useStyles = makeStyles(theme => ({
 export default function SignUp() {
   const classes = useStyles();
 
-  const [form, setForm] = useState({ email: "", password: "" });
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+    fullName: "",
+    username: ""
+  });
   const [error, setError] = useState({ status: false, message: "" });
   const [redirect, setRedirect] = useState({ status: false });
 
@@ -56,7 +61,7 @@ export default function SignUp() {
 
   const make = async e => {
     e.preventDefault();
-    const result = await signUp(form.email, form.password);
+    const result = await signUp(form);
     if (result.status) {
       setRedirect({ status: true });
     } else {
@@ -75,6 +80,30 @@ export default function SignUp() {
           Faça seu cadastro no Gitfy
         </Typography>
         <form onSubmit={make} className={classes.form}>
+          <TextField
+            variant="outlined"
+            required
+            fullWidth
+            margin="normal"
+            id="fullName"
+            label="Nome Completo"
+            name="name"
+            autoComplete="name"
+            onChange={onChange}
+            value={form.fullName}
+          />
+          <TextField
+            variant="outlined"
+            required
+            fullWidth
+            margin="normal"
+            id="username"
+            label="Nome de usuário"
+            name="username"
+            autoComplete="username"
+            onChange={onChange}
+            value={form.username}
+          />
           <TextField
             variant="outlined"
             required
